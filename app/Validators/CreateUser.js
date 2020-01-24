@@ -25,5 +25,3 @@ class CreateUser {
 }
 
 module.exports = CreateUser
-
-module.exports = CreateUser
