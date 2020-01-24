@@ -94,6 +94,19 @@ class UserController {
    */
   async destroy ({ params, request, response }) {
   }
+
+  /**
+   * Delete a user with id.
+   * DELETE users/:id
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async logout ({ auth, params, request, response }) {
+    await auth.logout()
+    return response.redirect('/')
+  }
 }
 
 module.exports = UserController

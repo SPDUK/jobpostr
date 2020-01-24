@@ -20,5 +20,6 @@ Route.get('/', 'JobController.home')
 
 Route.on('/signup').render('auth.signup')
 Route.post('/signup', 'UserController.create').validator('CreateUser')
+Route.get('/logout', 'UserController.logout')
 
 Route.on('/login').render('auth.login')
