@@ -33,6 +33,14 @@ class JobController {
     return view.render('index', { jobs: jobs.toJSON() })
   }
 
+  async userIndex ({ view, auth }) {
+    // Fetch all user's jobs
+    const jobs = await auth.user.jobs().fetch()
+    console.log(jobs)
+
+    return view.render('jobs', { jobs: jobs.toJSON() })
+  }
+
   /**
    * Render a form to be used for creating a new job.
    * GET jobs/create
@@ -40,9 +48,18 @@ class JobController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
+  async create ({ auth, session, request, response }) {
+    const job = request.all()
+
+    await auth.user.jobs().create({
+      title: job.title,
+      link: job.link,
+      description: job.description
+    })
+
+    session.flash({ message: 'Your job has been posted!' })
+    return response.redirect('back')
   }
 
   /**
@@ -78,6 +95,8 @@ class JobController {
    * @param {View} ctx.view
    */
   async edit ({ params, request, response, view }) {
+    const job = await Job.find(params.id)
+    return view.render('edit', { job: job })
   }
 
   /**
@@ -89,6 +108,16 @@ class JobController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const job = await Job.find(params.id)
+
+    job.title = request.all().title
+    job.link = request.all().link
+    job.description = request.all().description
+
+    await job.save()
+
+    session.flash({ message: 'Your job has been updated. ' })
+    return response.redirect('/post-a-job')
   }
 
   /**
@@ -99,7 +128,12 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ session, params, request, response }) {
+    const job = await Job.find(params.id)
+
+    await job.delete()
+    session.flash({ message: 'Your job has been removed' })
+    return response.redirect('back')
   }
 }
 

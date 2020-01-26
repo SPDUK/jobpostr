@@ -34,6 +34,16 @@ class User extends Model {
   tokens () {
     return this.hasMany('App/Models/Token')
   }
+
+  /**
+   * A relationship on jobs (Users have many jobs)
+   * Used so our controller can automatically append the currently logged in user's ID to new job postings.
+   * @method jobs
+   * @return {Object}
+   */
+  jobs () {
+    return this.hasMany('App/Models/Job')
+  }
 }
 
 module.exports = User

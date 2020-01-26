@@ -23,3 +23,13 @@ Route.post('/signup', 'UserController.create').validator('CreateUser')
 Route.get('/logout', 'UserController.logout')
 Route.post('/logout', 'UserController.login').validator('LoginUser')
 Route.on('/login').render('auth.login')
+
+Route.get('/post-a-job', 'JobController.userIndex')
+
+Route.group(() => {
+  Route.get('', 'JobController.userIndex')
+  Route.post('', 'JobController.create').validator('CreateJob')
+  Route.get('/destroy/:id', 'JobController.destroy')
+  Route.get('/edit/:id', 'JobController.edit')
+  Route.post('/update/:id', 'JobController.update').validator('CreateJob')
+}).prefix('/post-a-job')
