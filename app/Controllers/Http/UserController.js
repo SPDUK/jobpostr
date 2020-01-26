@@ -96,8 +96,28 @@ class UserController {
   }
 
   /**
-   * Delete a user with id.
-   * DELETE users/:id
+   * Login a user
+   * POST login
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async login ({ request, auth, response, session }) {
+    const { email, password } = request.all()
+
+    try {
+      await auth.attempt(email, password)
+      return response.redirect('/')
+    } catch (error) {
+      session.flash({ loginError: 'These credentials do not work.' })
+      return response.redirect('/login')
+    }
+  }
+
+  /**
+   * Login a user with .
+   * Post logout
    *
    * @param {object} ctx
    * @param {Request} ctx.request
